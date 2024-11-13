@@ -40,12 +40,12 @@ function Checkout() {
       await createOrder(newOrder).unwrap();
       Swal.fire({
         title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        text: "Order will be created!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: "Yes, confirm!",
       }).then((result) => {
         if (result.isConfirmed) {
           Swal.fire({

@@ -21,7 +21,7 @@ app.use(
 
 // API Routes
 app.use("/api/books", bookRoutes);
-app.use("/api/order", orderRoutes);
+app.use("/api/orders", orderRoutes);
 
 // MongoDB Connection
 async function main() {
