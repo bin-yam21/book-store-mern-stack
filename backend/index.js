@@ -7,6 +7,7 @@ require("dotenv").config();
 
 // Routes
 const bookRoutes = require("./src/books/book.route");
+const orderRoutes = require("./src/orders/order.route");
 
 // Middleware
 app.use(morgan("dev"));
@@ -20,6 +21,7 @@ app.use(
 
 // API Routes
 app.use("/api/books", bookRoutes);
+app.use("/api/order", orderRoutes);
 
 // MongoDB Connection
 async function main() {
