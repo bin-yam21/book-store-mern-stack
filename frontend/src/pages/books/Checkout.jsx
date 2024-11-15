@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useCreateOrderMutation } from "../../redux/features/orders/orderApi";
 import Swal from "sweetalert2";
@@ -16,6 +16,7 @@ function Checkout() {
     formState: { errors },
   } = useForm();
   const [createOrder, { isLoading, error }] = useCreateOrderMutation();
+  const navigate = useNavigate();
 
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalPrice = cartItems
@@ -55,6 +56,7 @@ function Checkout() {
           });
         }
       });
+      navigate("/order");
     } catch (error) {
       console.error("Error while creating an order", error);
     }
