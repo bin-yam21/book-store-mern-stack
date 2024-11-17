@@ -21,14 +21,28 @@ const createOrder = async (req, res) => {
 const getOrderByEmail = async (req, res) => {
   try {
     const { email } = req.params;
-    const order = await Order.find({ email }).sort({ createdAt: -1 });
-    if (!order) {
-      return res.status(404).send({ message: "Order not found" });
+
+    // Fetch orders by email and sort by creation date (newest first)
+    const orders = await Order.find({ email }).sort({ createdAt: -1 });
+
+    // Check if any orders are found
+    if (orders.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No orders found for this email" });
     }
-    res.status(200).json({ data: order });
+
+    // Send the found orders
+    res.status(200).json({ data: orders });
   } catch (error) {
-    console.error("Error while fetching order", error);
-    res.status(500).send({ message: "failed to fetch the order" });
+    console.error("Error while fetching order:", error);
+
+    // Send a server error response
+    res.status(500).json({
+      message: "Failed to fetch the orders. Please try again later.",
+      error: error.message, // Optional: include this only in development/debugging mode
+    });
   }
 };
+
 module.exports = { createOrder, getOrderByEmail };

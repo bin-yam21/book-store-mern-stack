@@ -3,6 +3,7 @@ import { useGetOrderByEmailQuery } from "../../redux/features/orders/orderApi";
 
 function OrderPage() {
   const { currentUser } = useAuth();
+  console.log("Fetching orders for email:", currentUser?.email);
 
   const {
     data: orders = [],
@@ -10,7 +11,7 @@ function OrderPage() {
     isError,
     error,
   } = useGetOrderByEmailQuery(currentUser?.email);
-
+  // console.log(orders);
   if (isLoading) {
     return <div>Loading...</div>;
   }
