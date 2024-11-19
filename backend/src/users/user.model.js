@@ -1,21 +1,19 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    undefined: true,
+    unique: true,
   },
   password: {
     type: String,
     required: true,
-    minlength: 6,
-    select: false,
   },
   role: {
     type: String,
-    enum: ["admin", "user"],
-    default: "user",
+    enum: ["user", "admin"],
     required: true,
   },
 });
@@ -26,6 +24,12 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-const user = mongoose.model("user", userSchema);
+userSchema.methods.checkPassword = async function (inputPassword, password) {
+  const res = await bcrypt.compare(inputPassword, password);
+  console.log(res);
+  return res;
+};
 
-module.exports = user;
+const User = mongoose.model("User", userSchema);
+
+module.exports = User;
