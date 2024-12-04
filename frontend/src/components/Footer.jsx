@@ -40,7 +40,7 @@ function Footer() {
             placeholder="Enter Your Email"
             className="w-full px-4 py-2 rounded-l-md "
           />
-          <button className="bg-blue-400 px-6 py-2 rounded-r-md hover:bg-primary-dark">
+          <button className="bg-blue-400 mx-4 px-6 py-2 rounded-r-md hover:bg-primary-dark">
             Subscribe
           </button>
         </div>
