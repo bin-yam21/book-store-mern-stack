@@ -2,116 +2,105 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getImgUrl } from "../../utils/getImgUrl";
 import { clearCart, removeFromCart } from "../../redux/features/cart/cartSlice";
+import { FiTrash2, FiArrowRight } from "react-icons/fi";
 
 function Cart() {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalPrice = cartItems
     .reduce((acc, item) => acc + item.newPrice, 0)
-    .toFixed(2);
+    .toFixed(0);
 
-  const handleRemoveFromCart = (product) => {
-    dispatch(removeFromCart(product));
-  };
-  const handleClearCart = () => {
-    dispatch(clearCart());
-  };
+  const handleRemoveFromCart = (product) => dispatch(removeFromCart(product));
+  const handleClearCart = () => dispatch(clearCart());
+
   return (
-    <div className="flex mt-12 h-full flex-col overflow-hidden bg-white shadow-xl">
-      <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
-        <div className="flex items-start justify-between">
-          <div className="text-lg font-medium text-gray-900">Shopping cart</div>
-          <div className="ml-3 flex h-7 items-center ">
-            <button
-              onClick={handleClearCart}
-              type="button"
-              className="relative -m-2 py-1 px-2 bg-red-500 text-white rounded-md hover:bg-secondary transition-all duration-200  "
-            >
-              <span className="">Clear Cart</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="mt-8">
-          <div className="flow-root">
-            {cartItems.length > 0 ? (
-              <ul role="list" className="-my-6 divide-y divide-gray-200">
-                {cartItems.map((product) => (
-                  <li key={product._id} className="flex py-6">
-                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                      <img
-                        alt=""
-                        src={`${getImgUrl(product.coverImage)}`}
-                        className="h-full w-full object-cover object-center"
-                      />
-                    </div>
-
-                    <div className="ml-4 flex flex-1 flex-col">
-                      <div>
-                        <div className="flex flex-wrap justify-between text-base font-medium text-gray-900">
-                          <h3>
-                            <Link to="/">{product?.title}</Link>
-                          </h3>
-                          <p className="sm:ml-4">{product?.newPrice}</p>
-                        </div>
-                        <p className="mt-1 text-sm text-gray-500 capitalize">
-                          <strong>Category:</strong> {product?.category}
-                        </p>
-                      </div>
-                      <div className="flex flex-1 flex-wrap items-end justify-between space-y-2 text-sm">
-                        <p className="text-gray-500">
-                          <strong>Qty:</strong> 1
-                        </p>
-
-                        <div className="flex">
-                          <button
-                            onClick={() => handleRemoveFromCart(product)}
-                            type="button"
-                            className="font-medium text-indigo-600 hover:text-indigo-500"
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No product found</p>
-            )}
-          </div>
-        </div>
+    <div className="py-8">
+      <div className="flex items-center justify-between">
+        <h1 className="font-display text-3xl font-semibold text-ink">
+          Shopping cart
+        </h1>
+        {cartItems.length > 0 && (
+          <button
+            onClick={handleClearCart}
+            className="rounded-full border border-line px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:border-red-300 hover:bg-red-50"
+          >
+            Clear cart
+          </button>
+        )}
       </div>
 
-      <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
-        <div className="flex justify-between text-base font-medium text-gray-900">
-          <p>Subtotal</p>
-          <p>${totalPrice}</p>
+      <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_340px]">
+        {/* items */}
+        <div className="rounded-2xl border border-line bg-white p-2 shadow-card">
+          {cartItems.length > 0 ? (
+            <ul className="divide-y divide-line">
+              {cartItems.map((product) => (
+                <li key={product._id} className="flex gap-4 p-4">
+                  <div className="size-24 shrink-0 overflow-hidden rounded-lg border border-line bg-cream p-2">
+                    <img
+                      alt={product?.title}
+                      src={`${getImgUrl(product.coverImage)}`}
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                  <div className="flex flex-1 flex-col">
+                    <div className="flex justify-between gap-4">
+                      <h3 className="font-display text-lg font-semibold text-ink">
+                        <Link to={`/books/${product._id}`}>{product?.title}</Link>
+                      </h3>
+                      <p className="whitespace-nowrap font-semibold text-ink">
+                        {product?.newPrice} Birr
+                      </p>
+                    </div>
+                    <p className="mt-1 text-sm text-muted">{product?.category}</p>
+                    <div className="mt-auto flex items-center justify-between pt-3 text-sm">
+                      <span className="text-muted">Qty: 1</span>
+                      <button
+                        onClick={() => handleRemoveFromCart(product)}
+                        className="inline-flex items-center gap-1.5 font-medium text-red-600 hover:text-red-700"
+                      >
+                        <FiTrash2 className="size-4" /> Remove
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="p-12 text-center text-muted">
+              Your cart is empty.
+            </div>
+          )}
         </div>
-        <p className="mt-0.5 text-sm text-gray-500">
-          Shipping and taxes calculated at checkout.
-        </p>
-        <div className="mt-6">
+
+        {/* summary */}
+        <aside className="h-fit rounded-2xl border border-line bg-white p-6 shadow-card">
+          <h2 className="font-display text-lg font-semibold text-ink">
+            Order summary
+          </h2>
+          <div className="mt-4 flex justify-between text-sm text-muted">
+            <span>Subtotal</span>
+            <span className="font-medium text-ink">{totalPrice} Birr</span>
+          </div>
+          <p className="mt-1 text-xs text-muted">
+            Shipping and taxes calculated at checkout.
+          </p>
           <Link
             to="/checkout"
-            className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+            className={`btn-primary mt-6 w-full ${
+              cartItems.length === 0 ? "pointer-events-none opacity-50" : ""
+            }`}
           >
-            Checkout
+            Checkout <FiArrowRight className="size-4" />
           </Link>
-        </div>
-        <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
-          <Link to="/">
-            or
-            <button
-              type="button"
-              className="font-medium text-indigo-600 hover:text-indigo-500 ml-1"
-            >
-              Continue Shopping
-              <span aria-hidden="true"> &rarr;</span>
-            </button>
+          <Link
+            to="/"
+            className="mt-3 block text-center text-sm font-medium text-brand hover:underline"
+          >
+            Continue shopping
           </Link>
-        </div>
+        </aside>
       </div>
     </div>
   );

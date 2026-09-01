@@ -1,19 +1,19 @@
 import { Link } from "react-router-dom";
-import { HiOutlineBars3CenterLeft } from "react-icons/hi2";
 import { CiSearch } from "react-icons/ci";
 import { FaUserCircle } from "react-icons/fa";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { IoCartOutline } from "react-icons/io5";
+import { HiOutlineBookOpen } from "react-icons/hi2";
 import avaterImg from "../assets/avatar.png";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useAuth } from "../context/AuthContext";
 
 const navigation = [
-  { name: "dashboard", href: "/dashboard" },
-  { name: "orders", href: "/order" },
-  { name: "cart Page", href: "/cart" },
-  { name: "check Out", href: "/checkout" },
+  { name: "Dashboard", href: "/dashboard" },
+  { name: "Orders", href: "/order" },
+  { name: "Cart Page", href: "/cart" },
+  { name: "Check Out", href: "/checkout" },
 ];
 
 function Navbar() {
@@ -26,93 +26,95 @@ function Navbar() {
   };
 
   return (
-    <div className="container">
-      <header className="max-w-screen-2xl mx-auto px-4 py-6">
-        <nav className="flex justify-between items-center">
-          {/* left-side */}
-          <div className="flex items-center md:gap-16 gap-4">
-            <Link to="/">
-              <HiOutlineBars3CenterLeft className="size-6" />
-            </Link>
+    <header className="sticky top-0 z-50 border-b border-line bg-parchment/85 backdrop-blur-md">
+      <nav className="shell flex h-[72px] items-center justify-between gap-6">
+        {/* ---- Brand ---- */}
+        <Link to="/" className="flex shrink-0 items-center gap-2.5">
+          <span className="grid size-10 place-items-center rounded-xl bg-brand text-parchment">
+            <HiOutlineBookOpen className="size-5" />
+          </span>
+          <span className="leading-none">
+            <span className="block font-display text-xl font-semibold tracking-tight text-ink">
+              Birana
+            </span>
+            <span className="block text-[0.65rem] uppercase tracking-[0.2em] text-muted">
+              Bookstore
+            </span>
+          </span>
+        </Link>
 
-            {/* seacrh input */}
-            <div className="relative sm:w-72 w-40 space-x-2">
-              <CiSearch className="absolute inline-block inset-y-2 left-3" />
-              <input
-                type="text"
-                placeholder="Search here"
-                className="bg-[#EAEAEA] w-full py-1 md:px-8 px-6 rounded-md focus:outline-none"
-              />
-            </div>
-          </div>
-          {/* right-side */}
-          <div className="relative flex items-center md:space-x-3 space-x-2">
-            <div>
-              {currentUser ? (
-                <>
-                  <button onClick={() => setIsDropDownOpen(!isDropDownOpen)}>
-                    <img
-                      src={avaterImg}
-                      alt=""
-                      className={`size-7 rounded-full ${
-                        currentUser ? "ring-2 ring-blue-500" : ""
-                      }`}
-                    />
-                  </button>
-                  {/* show dropdowns */}
-                  {isDropDownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-40">
-                      <ul className="py-2">
-                        {navigation.map((item) => (
-                          <li key={item.name}>
-                            <Link
-                              onClick={() => setIsDropDownOpen(false)}
-                              to={item.href}
-                              className="block px-4 py-2 text-sm hover:bg-gray-100"
-                            >
-                              {item.name}
-                            </Link>
-                          </li>
-                        ))}
-                        <li>
-                          <button
-                            className="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100"
-                            onClick={handleLogout}
+        {/* ---- Search (desktop) ---- */}
+        <div className="relative hidden max-w-md flex-1 md:block">
+          <CiSearch className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted" />
+          <input
+            type="text"
+            placeholder="Search books, authors, genres…"
+            className="w-full rounded-full border border-line bg-white/70 py-2.5 pl-11 pr-4 text-sm text-ink placeholder:text-muted focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+          />
+        </div>
+
+        {/* ---- Actions ---- */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button className="hidden rounded-full p-2 text-ink transition-colors hover:bg-cream sm:block">
+            <IoIosHeartEmpty className="size-6" />
+          </button>
+
+          <Link
+            to="/cart"
+            className="flex items-center gap-2 rounded-full bg-gold px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-gold-dark"
+          >
+            <IoCartOutline className="size-5" />
+            <span>{cartItems.length}</span>
+          </Link>
+
+          <div className="relative">
+            {currentUser ? (
+              <>
+                <button onClick={() => setIsDropDownOpen(!isDropDownOpen)}>
+                  <img
+                    src={avaterImg}
+                    alt="account"
+                    className="size-9 rounded-full ring-2 ring-brand"
+                  />
+                </button>
+                {isDropDownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-xl border border-line bg-white shadow-lift">
+                    <ul className="py-1.5">
+                      {navigation.map((item) => (
+                        <li key={item.name}>
+                          <Link
+                            onClick={() => setIsDropDownOpen(false)}
+                            to={item.href}
+                            className="block px-4 py-2 text-sm text-ink hover:bg-cream"
                           >
-                            Logout
-                          </button>
+                            {item.name}
+                          </Link>
                         </li>
-                      </ul>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <Link to="/login">
-                  <FaUserCircle className="size-6" />
-                </Link>
-              )}
-            </div>
-
-            <button className="hidden sm:block">
-              <IoIosHeartEmpty className="size-6" />
-            </button>
-            <Link
-              to="/cart"
-              className="bg-primary p-1 sm:px-6 px-2 flex items-center rounded-sm"
-            >
-              <IoCartOutline />
-              {cartItems.length > 0 ? (
-                <span className="text-sm font-semibold sm:ml-1">
-                  {cartItems.length}
-                </span>
-              ) : (
-                <span className="text-sm font-semibold sm:ml-1">0</span>
-              )}
-            </Link>
+                      ))}
+                      <li>
+                        <button
+                          className="block w-full px-4 py-2 text-left text-sm text-ink hover:bg-cream"
+                          onClick={handleLogout}
+                        >
+                          Logout
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="flex items-center gap-2 rounded-full p-2 text-ink transition-colors hover:bg-cream"
+              >
+                <FaUserCircle className="size-6" />
+              </Link>
+            )}
           </div>
-        </nav>
-      </header>
-    </div>
+        </div>
+      </nav>
+    </header>
   );
 }
 

@@ -1,0 +1,18 @@
+# Render Blueprint for the Birana backend (Express + MongoDB).
+# In Render: New → Blueprint → connect this repo. Then set the env vars below.
+services:
+  - type: web
+    name: birana-api
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: DB_URL
+        sync: false # MongoDB Atlas connection string
+      - key: JWT_SECRET_KEY
+        sync: false # long random string
+      - key: FRONTEND_URL
+        sync: false # e.g. https://birana.vercel.app

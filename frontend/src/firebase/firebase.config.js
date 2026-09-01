@@ -14,6 +14,9 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_APPID,
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+// Only initialize when a real config is present, so the app runs (and the
+// storefront is fully browsable) even without Firebase credentials.
+export const isFirebaseConfigured = Boolean(firebaseConfig.apiKey);
+
+const app = isFirebaseConfigured ? initializeApp(firebaseConfig) : null;
+export const auth = app ? getAuth(app) : null;

@@ -13,9 +13,15 @@ const adminRoutes = require("./src/stats/admin.stat");
 // Middleware
 app.use(morgan("dev"));
 app.use(express.json());
+const allowedOrigins = [
+  "http://localhost:5173", // Vite dev server
+  "http://localhost:3000",
+  process.env.FRONTEND_URL, // production frontend
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: allowedOrigins,
     credentials: true,
   })
 );
@@ -39,5 +45,5 @@ app.get("/", (req, res) => {
 });
 
 // Start Server
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`The server is listening on port ${port}`));

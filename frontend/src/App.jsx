@@ -8,13 +8,13 @@ function App() {
   return (
     <>
       <AuthProvider>
-        <Navbar />
-        <div className="container">
-          <main className="min-h-screen max-w-screen-2xl mx-auto px-4 py-6 font-primary">
+        <div className="flex min-h-screen flex-col bg-parchment font-primary text-ink">
+          <Navbar />
+          <main className="shell w-full flex-1 py-8">
             <Outlet />
           </main>
+          <Footer />
         </div>
-        <Footer />
       </AuthProvider>
     </>
   );

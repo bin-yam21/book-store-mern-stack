@@ -1,3 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-parchment text-ink font-primary antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+  }
+  /* Amharic text renders with a proper Ethiopic serif */
+  :lang(am),
+  .amharic {
+    font-family: "Noto Serif Ethiopic", serif;
+  }
+}
+
+@layer components {
+  .shell {
+    @apply max-w-shell mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-parchment transition-all duration-200 hover:bg-brand-dark hover:-translate-y-0.5 cursor-pointer;
+  }
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-gold-dark hover:-translate-y-0.5 cursor-pointer;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-line px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand cursor-pointer;
+  }
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-gold-dark;
+  }
+  .section-title {
+    @apply font-display text-3xl sm:text-4xl font-semibold text-ink;
+  }
+}

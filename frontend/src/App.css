@@ -1,6 +1,3 @@
-/* @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"); */
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
-/* @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap"); */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -13,50 +10,33 @@ html {
   margin-left: auto;
   margin-right: auto;
 }
+
+/* ---- Swiper (used by the News carousel) ---- */
 .swiper {
   width: 100%;
   height: 100%;
 }
-
 .swiper-slide {
-  background: #fff;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
+  height: auto;
 }
-
-.swiper-slide img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .swiper-button-prev {
   display: none !important;
 }
 .swiper-button-next {
-  @apply bg-white p-5 rounded-full z-50 shadow-md;
+  @apply bg-white text-ink p-4 rounded-full z-40 shadow-card;
 }
-
-.swiper-button-prev:after,
 .swiper-button-next:after {
-  font-size: 16px !important;
-}
-/* CSS */
-.swiper-container {
-  overflow: hidden;
-}
-
-.btn-primary {
-  @apply bg-primary  px-6 py-2 rounded-md text-base font-secondary font-bold hover:bg-secondary hover:text-white transition-all duration-200 cursor-pointer;
+  font-size: 14px !important;
+  font-weight: 700;
 }
 .swiper-pagination-bullet {
-  background-color: #000;
-  opacity: 0.7;
+  background-color: #211c18;
+  opacity: 0.4;
 }
-
 .swiper-pagination-bullet-active {
-  background-color: #007aff;
+  background-color: #1e5140;
   opacity: 1;
 }
