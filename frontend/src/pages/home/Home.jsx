@@ -5,12 +5,12 @@ import TopSellers from "./TopSellers";
 
 function Home() {
   return (
-    <>
+    <div className="space-y-4">
       <Banner />
       <TopSellers />
       <Recommended />
       <News />
-    </>
+    </div>
   );
 }
 

@@ -23,24 +23,41 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const requireAuth = () => {
+    if (!auth) {
+      throw new Error(
+        "Authentication is not configured. Add your Firebase config to enable sign in."
+      );
+    }
+  };
+
   // register a user
   const registerUser = async (email, password) => {
+    requireAuth();
     return await createUserWithEmailAndPassword(auth, email, password);
   };
   // login user
   const loginUser = async (email, password) => {
+    requireAuth();
     return await signInWithEmailAndPassword(auth, email, password);
   };
   //   sign up with google account
   const signInWithGoogle = async () => {
+    requireAuth();
     return await signInWithPopup(auth, googleprovider);
   };
   //   sign out tht user
   const logout = () => {
+    requireAuth();
     return signOut(auth);
   };
   //   manage user
   useEffect(() => {
+    // No Firebase config → no auth session to track; render as signed-out.
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setLoading(false);

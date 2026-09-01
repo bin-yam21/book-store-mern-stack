@@ -1,90 +1,83 @@
 import { useState } from "react";
 import BookCard from "../books/BookCard";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/swiper-bundle.css";
-import { Pagination, Mousewheel, Navigation } from "swiper/modules"; // Import Navigation as well
 import { useFetchAllBooksQuery } from "../../redux/features/books/bookApi";
 
+const ALL_CATEGORIES = "All genres";
 const categories = [
-  "Choose a genra",
-  "Religion",
-  "Adventure",
+  ALL_CATEGORIES,
   "Fiction",
   "History",
-  "Marketing",
-  "Children",
+  "Biography",
   "Business",
+  "Poetry",
+  "Children",
+  "Religion",
 ];
 
+function SectionSkeleton({ message }) {
+  return (
+    <div className="rounded-2xl border border-dashed border-line bg-cream/50 p-10 text-center text-muted">
+      {message}
+    </div>
+  );
+}
+
 function TopSellers() {
-  // const [books, setBooks] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("Choose a genra");
+  const [selectedCategory, setSelectedCategory] = useState(ALL_CATEGORIES);
   const { data: bookss, isLoading, error } = useFetchAllBooksQuery();
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error fetching books</div>;
-  const { data: books } = bookss;
-
-  // useEffect(() => {
-  //   fetch("books.json")
-  //     .then((res) => res.json())
-  //     .then((data) => setBooks(data));
-  // }, []);
+  const books = bookss?.data ?? [];
 
   const filteredBooks =
-    selectedCategory === "Choose a genra"
+    selectedCategory === ALL_CATEGORIES
       ? books
       : books.filter(
           (book) =>
-            book.category.toLowerCase() === selectedCategory.toLowerCase()
+            book.category?.toLowerCase() === selectedCategory.toLowerCase()
         );
 
   return (
-    <div className="py-10">
-      <h2 className="text-3xl font-semibold mb-6">Top Sellers</h2>
-      {/* category filtering */}
-      <div className="mb-8 flex items-center">
-        <select
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          name="category"
-          id="category"
-          className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none bg-[#EAEAEA]"
-        >
-          {categories.map((category, index) => (
-            <option key={index} value={category}>
+    <section id="top-sellers" className="py-14 sm:py-20">
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <span className="eyebrow">Handpicked</span>
+          <h2 className="section-title mt-2">Top sellers</h2>
+        </div>
+
+        {/* genre filter */}
+        <div className="flex flex-wrap gap-2">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+                selectedCategory === category
+                  ? "border-brand bg-brand text-parchment"
+                  : "border-line bg-white text-muted hover:border-brand hover:text-brand"
+              }`}
+            >
               {category}
-            </option>
+            </button>
           ))}
-        </select>
+        </div>
       </div>
-      <Swiper
-        modules={[Pagination, Mousewheel, Navigation]} // Include Navigation here
-        // pagination={{ clickable: true }}
-        navigation={true} // Enable navigation arrows
-        mousewheel={{ forceToAxis: true }} // Enable horizontal scroll with the mouse wheel
-        grabCursor={true} // Enable cursor grabbing for drag-to-slide effect
-        breakpoints={{
-          640: {
-            slidesPerView: 1,
-            spaceBetween: 30,
-          },
-          768: {
-            slidesPerView: 2,
-            spaceBetween: 40,
-          },
-          1024: {
-            slidesPerView: 3,
-            spaceBetween: 50,
-          },
-        }}
-      >
-        {filteredBooks.map((books, index) => (
-          <SwiperSlide key={index}>
-            <BookCard book={books} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </div>
+
+      <div className="mt-10">
+        {isLoading ? (
+          <SectionSkeleton message="Loading books…" />
+        ) : error ? (
+          <SectionSkeleton message="Couldn't load books. Please try again." />
+        ) : filteredBooks.length === 0 ? (
+          <SectionSkeleton message="No books in this genre yet." />
+        ) : (
+          <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
+            {filteredBooks.slice(0, 8).map((book) => (
+              <BookCard key={book._id} book={book} />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
 

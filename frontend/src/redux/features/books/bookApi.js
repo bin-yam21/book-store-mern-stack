@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import getBaseUrl from "../../../utils/baseUrl";
 
 export const booksApi = createApi({
   reducerPath: "booksApi",
   tagTypes: ["Books"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000/api/books",
+    baseUrl: `${getBaseUrl()}/api/books`,
     credentials: "include",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
@@ -69,7 +70,7 @@ export const booksApi = createApi({
     deleteBook: builder.mutation({
       query: (id) => ({
         url: `/${id}`,
-        meethod: "DELETE",
+        method: "DELETE",
       }),
       invalidatesTags: ["Books"],
     }),

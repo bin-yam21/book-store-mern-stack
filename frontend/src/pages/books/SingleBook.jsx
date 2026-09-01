@@ -1,66 +1,95 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useFetchBookByIdQuery } from "../../redux/features/books/bookApi";
 import { getImgUrl } from "../../utils/getImgUrl";
-import { FiShoppingCart } from "react-icons/fi";
+import { FiShoppingCart, FiArrowLeft } from "react-icons/fi";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/features/cart/cartSlice";
+
 function SingleBook() {
   const dispatch = useDispatch();
+  const { id } = useParams();
+  const { data, isLoading, error } = useFetchBookByIdQuery(id);
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
   };
-  const { id } = useParams();
-
-  //   console.log("ID from URL:", id); // Check if this is logged correctly
-  const { data, isLoading, error } = useFetchBookByIdQuery(id);
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <p className="py-20 text-center text-muted">Loading…</p>;
+  }
+  if (error) {
+    return (
+      <p className="py-20 text-center text-muted">Couldn&apos;t load this book.</p>
+    );
   }
 
-  if (error) {
-    return <p>Error loading data: {error.message}</p>;
-  }
-  console.log(data);
-  //   const { newPrice } = message;
+  const book = data.message;
 
   return (
-    <div className="max-w-lg shadow-md p-5">
-      <h1 className="text-2xl font-bold mb-6">{data.message.title}</h1>
-      <div className="">
-        <div>
+    <div className="py-8">
+      <Link
+        to="/"
+        className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-brand"
+      >
+        <FiArrowLeft className="size-4" /> Back to store
+      </Link>
+
+      <div className="grid gap-10 rounded-3xl border border-line bg-white p-6 shadow-card sm:p-10 lg:grid-cols-2">
+        {/* cover */}
+        <div className="flex items-center justify-center rounded-2xl bg-cream p-10">
           <img
-            src={`${getImgUrl(data.message.coverImage)}`}
-            alt={data.message.title}
-            className="mb-8"
+            src={`${getImgUrl(book.coverImage)}`}
+            alt={book.title}
+            className="max-h-[420px] w-auto rounded-md object-contain shadow-lift"
           />
         </div>
-        <div className="mb-5">
-          <p className="text-gray-700 mb-2">
-            <strong>Author: </strong>
-            {data.message.author || "admin"}
-          </p>
-          <p className="text-gray-700 mb-4">
-            <strong>Published: </strong>
-            {new Date(data.message.createdAt).toLocaleString()}
-          </p>
-          <p className="text-gray-700 mb-4 capitalize">
-            <strong>Category: </strong>
-            {data.message?.category}
-          </p>
-          <p className="text-gray-700">
-            <strong>Description: </strong>
-            {data.message?.description}
-          </p>
+
+        {/* details */}
+        <div className="flex flex-col">
+          {book.category && (
+            <span className="eyebrow">{book.category}</span>
+          )}
+          <h1 className="mt-3 font-display text-3xl font-semibold text-ink sm:text-4xl">
+            {book.title}
+          </h1>
+
+          <div className="mt-5 flex items-baseline gap-3">
+            <span className="font-display text-3xl font-semibold text-brand">
+              {book.newPrice}{" "}
+              <span className="text-lg font-normal">Birr</span>
+            </span>
+            {book.oldPrice ? (
+              <span className="text-lg text-muted line-through">
+                {book.oldPrice} Birr
+              </span>
+            ) : null}
+          </div>
+
+          <p className="mt-6 leading-relaxed text-muted">{book.description}</p>
+
+          <dl className="mt-6 space-y-2 border-t border-line pt-6 text-sm">
+            <div className="flex gap-2">
+              <dt className="font-semibold text-ink">Author:</dt>
+              <dd className="text-muted">{book.author || "Various"}</dd>
+            </div>
+            <div className="flex gap-2">
+              <dt className="font-semibold text-ink">Added:</dt>
+              <dd className="text-muted">
+                {new Date(book.createdAt).toLocaleDateString()}
+              </dd>
+            </div>
+          </dl>
+
+          <div className="mt-auto pt-8">
+            <button
+              onClick={() => handleAddToCart(book)}
+              className="btn-gold w-full sm:w-auto"
+            >
+              <FiShoppingCart className="size-4" />
+              Add to cart
+            </button>
+          </div>
         </div>
-        <button
-          className="btn-primary px-6 space-x-1 flex items-center gap-1"
-          onClick={() => handleAddToCart(data.message)}
-        >
-          <FiShoppingCart className="" />
-          <span>Add to cart</span>
-        </button>
       </div>
     </div>
   );

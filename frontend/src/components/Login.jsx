@@ -1,8 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
+import { HiOutlineBookOpen } from "react-icons/hi2";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
+
+const inputClass =
+  "w-full rounded-lg border border-line bg-parchment px-4 py-2.5 text-sm text-ink placeholder:text-muted focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20";
 
 function Login() {
   const [message, setMessage] = useState("");
@@ -11,105 +15,90 @@ function Login() {
   const {
     register,
     handleSubmit,
-
     formState: { errors },
   } = useForm();
+
   const onSubmit = async (data) => {
     try {
       await loginUser(data.email, data.password);
-      alert("Login successful");
       navigate("/");
     } catch (error) {
-      setMessage(
-        error +
-          "email or password incorrect please provide a valid email and password"
-      );
+      setMessage("Email or password is incorrect. Please try again.");
     }
   };
 
-  const hanleGoogleSignIn = async () => {
+  const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
-      alert("Login successfull");
       navigate("/");
     } catch (error) {
-      alert(error + "Google Sign in failed");
+      setMessage("Google sign-in failed. Please try again.");
     }
   };
 
   return (
-    <div className="h-[calc(100vh-120px)] flex justify-center items-center">
-      <div className="w-full max-w-sm mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4  ">
-        <h2 className="text-xl font-semibold mb-4">Please Login</h2>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 font-bold mb-2 text-sm"
-              htmlFor="email"
-            >
+    <div className="flex min-h-[70vh] items-center justify-center py-10">
+      <div className="w-full max-w-sm rounded-2xl border border-line bg-white p-8 shadow-card">
+        <div className="mb-6 flex flex-col items-center text-center">
+          <span className="grid size-11 place-items-center rounded-xl bg-brand text-parchment">
+            <HiOutlineBookOpen className="size-6" />
+          </span>
+          <h2 className="mt-4 font-display text-2xl font-semibold text-ink">
+            Welcome back
+          </h2>
+          <p className="mt-1 text-sm text-muted">Sign in to your Birana account</p>
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-ink" htmlFor="email">
               Email
             </label>
             <input
               {...register("email", { required: true })}
               type="email"
-              name="email"
-              id="name"
-              placeholder="Email address"
-              className="shadow appearance-none border rounded py-2 px-3 w-full leading-tight focus:outline-none focus:shadow-inner"
+              id="email"
+              placeholder="you@example.com"
+              className={inputClass}
             />
           </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 font-bold mb-2 text-sm"
-              htmlFor="Password"
-            >
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-ink" htmlFor="password">
               Password
             </label>
             <input
               {...register("password", { required: true })}
               type="password"
-              name="password"
               id="password"
-              placeholder="Password"
-              className="shadow appearance-none border rounded py-2 px-3 w-full leading-tight focus:outline-none focus:shadow-inner"
+              placeholder="••••••••"
+              className={inputClass}
             />
           </div>
-          {errors.email ||
-            (errors.password && (
-              <p className="text-red-500 text-xs italic mb-3">
-                Please Enter Valid UserName and Email Addrees
-              </p>
-            ))}
-          {/* {message && (
-            <p className="text-red-500 text-xs italic mb-3">
-              Please Enter Valid UserName and Email Addrees
-            </p>
-          )} */}
-          <div>
-            <button className="bg-blue-500 rounded focus:outline-none hover:bg-blue-700 text-white font-bold py-2 px-6">
-              Login
-            </button>
-          </div>
-        </form>
-        <p className="align-baseline font-medium mt-4 text-sm">
-          Haven`t an acoount ? Please{" "}
-          <Link to="/register" className="text-blue-500 hover:text-blue-700">
-            {" "}
-            Register{" "}
-          </Link>
-        </p>
-        {/* Google sign in */}
-        <div className="mt-4">
-          <button
-            onClick={hanleGoogleSignIn}
-            className="w-full flex flex-wrap gap-1 items-center justify-center bg-secondary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none"
-          >
-            <FaGoogle className="mr-2" />
-            Sign in with Google
+          {(errors.email || errors.password) && (
+            <p className="text-xs text-red-600">Please enter a valid email and password.</p>
+          )}
+          {message && <p className="text-xs text-red-600">{message}</p>}
+          <button type="submit" className="btn-primary w-full">
+            Sign in
           </button>
+        </form>
+
+        <div className="my-5 flex items-center gap-3 text-xs text-muted">
+          <span className="h-px flex-1 bg-line" /> or <span className="h-px flex-1 bg-line" />
         </div>
-        <p className="mt-5 text-center text-gray-500 text-xs">
-          &copy,2025 Book Store , All right Reserved
+
+        <button
+          onClick={handleGoogleSignIn}
+          className="flex w-full items-center justify-center gap-2 rounded-full border border-line py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-cream"
+        >
+          <FaGoogle className="text-brand" /> Continue with Google
+        </button>
+
+        <p className="mt-6 text-center text-sm text-muted">
+          Don&apos;t have an account?{" "}
+          <Link to="/register" className="font-semibold text-brand hover:underline">
+            Register
+          </Link>
         </p>
       </div>
     </div>
